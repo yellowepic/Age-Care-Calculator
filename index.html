@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Care Calculator | Financial Scenario Comparison</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="background-elements">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
+
+    <div class="container">
+        <header class="app-header glass-panel">
+            <h1>Age Care Calculator</h1>
+            <p>Compare financial scenarios for your aged care accommodation gracefully.</p>
+        </header>
+
+        <main class="dashboard-grid">
+            <!-- Inputs Panel -->
+            <section class="panel glass-panel inputs-panel">
+                <div class="panel-header">
+                    <h2>Financial Inputs</h2>
+                    <div class="icon-pulse"></div>
+                </div>
+                
+                <form id="calculator-form" class="inputs-grid">
+                    <div class="input-group">
+                        <label for="duration" data-tooltip="Number of years to project the financial scenario into the future.">Projection Years</label>
+                        <input type="number" id="duration" min="1" max="20" value="5">
+                    </div>
+                    <div class="input-group">
+                        <label for="savings" data-tooltip="Total cash, term deposits, and shares available before aged care costs.">Current Savings ($)</label>
+                        <input type="text" inputmode="decimal" id="savings" value="100,000">
+                    </div>
+                    <div class="input-group">
+                        <label for="houseValue" data-tooltip="Current market value of the family home.">House Value ($)</label>
+                        <input type="text" inputmode="decimal" id="houseValue" value="1,200,000">
+                    </div>
+                    <div class="input-group">
+                        <label for="interestRate" data-tooltip="Expected annual return on invested cash (e.g. 5%).">Cash Interest Rate (%)</label>
+                        <input type="number" id="interestRate" step="0.1" value="5">
+                    </div>
+                    <div class="input-group">
+                        <label for="houseGrowth" data-tooltip="Expected annual capital growth of the family home (e.g. 8%).">House Annual Growth (%)</label>
+                        <input type="number" id="houseGrowth" step="0.1" value="8">
+                    </div>
+                    <div class="input-group">
+                        <label for="houseRent" data-tooltip="Expected weekly rental income if the family home is leased outward.">Weekly House Rent ($)</label>
+                        <input type="text" inputmode="decimal" id="houseRent" value="1,000">
+                    </div>
+                    <div class="advanced-inputs-container">
+                        <details class="advanced-inputs">
+                            <summary>Aged Care Facility Details</summary>
+                            <div class="advanced-inputs-grid">
+                                <div class="input-group">
+                                    <label for="rad" data-tooltip="The full Refundable Accommodation Deposit quoted by the aged care facility.">RAD Required ($)</label>
+                                    <input type="text" inputmode="decimal" id="rad" value="470,000">
+                                </div>
+                                <div class="input-group">
+                                    <label for="mpir" data-tooltip="Maximum Permissible Interest Rate, government-set rate used to calculate Daily Accommodation Payments for unpaid RAD.">MPIR (%)</label>
+                                    <input type="number" id="mpir" step="0.01" value="7.61">
+                                </div>
+                                <div class="input-group">
+                                    <label for="basicFee" data-tooltip="Mandatory living cost fee set at 85% of the single Age Pension.">Basic Daily Fee ($/day)</label>
+                                    <input type="text" inputmode="decimal" id="basicFee" value="65.55">
+                                </div>
+                                <div class="input-group">
+                                    <label for="ncccFee" data-tooltip="Non-Clinical Care Contribution (Max $105.30/day, capped at $135,318.69 or 4 yrs)">NCCC Fee ($/day)</label>
+                                    <input type="text" inputmode="decimal" id="ncccFee" value="105.30">
+                                </div>
+                                <div class="input-group">
+                                    <label for="hscFee" data-tooltip="Hotelling Supplement Contribution (Max $22.15/day)">HSC Fee ($/day)</label>
+                                    <input type="text" inputmode="decimal" id="hscFee" value="22.15">
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Results Panel -->
+            <section class="panel glass-panel results-panel">
+                <div class="panel-header">
+                    <h2>Scenario Analysis (After <span id="display-duration">5</span> Years)</h2>
+                </div>
+
+                <div class="scenarios-container">
+                    <!-- Scenario 1: Sell House, Pay RAD -->
+                    <div class="scenario-card" id="scenario-1">
+                        <h3>Scenario 1: Sell House</h3>
+                        <p class="subtitle">Sell home & pay RAD in full (if possible). Remaining cash invested.</p>
+                        <div class="metrics">
+                            <div class="metric has-breakdown">
+                                <span class="label" data-tooltip="Total aggregation of all basic living costs and aged care facility fees paid over this scenario's duration.">Total Fees Paid</span>
+                                <span class="value" id="s1-fees">$0</span>
+                            </div>
+                            <div class="sub-metrics">
+                                    <div class="sub-metric"><span data-tooltip="Total mandatory living cost fee paid over the duration.">Basic Daily Fees</span><span id="s1-fees-basic">$0</span></div>
+                                    <div class="sub-metric"><span data-tooltip="Total Non-Clinical Care Contributions paid (Capped mathematically).">NCCC Paid</span><span id="s1-fees-nccc">$0</span></div>
+                                    <div class="sub-metric"><span data-tooltip="Total uncapped Hotelling Supplement Contributions paid.">HSC Paid</span><span id="s1-fees-hsc">$0</span></div>
+                                    <div class="sub-metric"><span data-tooltip="Total Daily Accommodation Payments calculated from unpaid RAD amounts.">DAP Paid</span><span id="s1-fees-dap">$0</span></div>
+                                <div class="sub-metric"><span data-tooltip="Portion of the RAD kept by the facility (Max 10% over 5 yrs).">RAD Retained</span><span id="s1-fees-rad">$0</span></div>
+                            </div>
+                            <div class="metric">
+                                <span class="label" data-tooltip="The physical cash remaining after all fees and expenses are paid at the end of the duration.">Ending Cash Balance</span>
+                                <span class="value" id="s1-cash">$0</span>
+                            </div>
+                            <div class="metric">
+                                <span class="label" data-tooltip="The remaining portion of the RAD that will be returned to your estate.">Refundable Deposit</span>
+                                <span class="value" id="s1-rad-refund">$0</span>
+                            </div>
+                            <div class="metric">
+                                <span class="label" data-tooltip="The final combined value of all your remaining cash, refunded deposits, and property value (if applicable) at the end of the timeframe.">Net Wealth Position</span>
+                                <span class="value highlight" id="s1-net">$0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scenario 2: Keep House, Pay DAP -->
+                    <div class="scenario-card" id="scenario-2">
+                        <h3>Scenario 2: Keep House (Empty)</h3>
+                        <p class="subtitle">Keep home, pay DAP entirely from cash savings. Home grows in value.</p>
+                        <div class="metrics">
+                            <div class="metric has-breakdown">
+                                <span class="label" data-tooltip="Total aggregation of all basic living costs and aged care facility fees paid over this scenario's duration.">Total Fees Paid</span>
+                                <span class="value" id="s2-fees">$0</span>
+                            </div>
+                            <div class="sub-metrics">
+                                    <div class="sub-metric"><span data-tooltip="Total mandatory living cost fee paid over the duration.">Basic Daily Fees</span><span id="s2-fees-basic">$0</span></div>
+                                    <div class="sub-metric"><span data-tooltip="Total Non-Clinical Care Contributions paid (Capped mathematically).">NCCC Paid</span><span id="s2-fees-nccc">$0</span></div>
+                                    <div class="sub-metric"><span data-tooltip="Total uncapped Hotelling Supplement Contributions paid.">HSC Paid</span><span id="s2-fees-hsc">$0</span></div>
+                                    <div class="sub-metric"><span data-tooltip="Total Daily Accommodation Payments calculated from unpaid RAD amounts.">DAP Paid</span><span id="s2-fees-dap">$0</span></div>
+                            </div>
+                            <div class="metric">
+                                <span class="label" data-tooltip="The physical cash remaining after all fees and expenses are paid at the end of the duration.">Ending Cash Balance</span>
+                                <span class="value" id="s2-cash">$0</span>
+                            </div>
+                            <div class="metric">
+                                <span class="label" data-tooltip="The final compounded value of the home based on your projected annual growth.">House Final Value</span>
+                                <span class="value" id="s2-house">$0</span>
+                            </div>
+                            <div class="metric">
+                                <span class="label" data-tooltip="The final combined value of all your remaining cash, refunded deposits, and property value (if applicable) at the end of the timeframe.">Net Wealth Position</span>
+                                <span class="value highlight" id="s2-net">$0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scenario 3: Rent House, Pay DAP -->
+                    <div class="scenario-card" id="scenario-3">
+                        <h3>Scenario 3: Rent House</h3>
+                        <p class="subtitle">Keep home & rent it out. Pay DAP from rental income and savings.</p>
+                        <div class="metrics">
+                            <div class="metric has-breakdown">
+                                <span class="label" data-tooltip="Total aggregation of all basic living costs and aged care facility fees paid over this scenario's duration.">Total Fees Paid</span>
+                                <span class="value" id="s3-fees">$0</span>
+                            </div>
+                            <div class="sub-metrics">
+                                    <div class="sub-metric"><span data-tooltip="Total mandatory living cost fee paid over the duration.">Basic Daily Fees</span><span id="s3-fees-basic">$0</span></div>
+                                    <div class="sub-metric"><span data-tooltip="Total Non-Clinical Care Contributions paid (Capped mathematically).">NCCC Paid</span><span id="s3-fees-nccc">$0</span></div>
+                                    <div class="sub-metric"><span data-tooltip="Total uncapped Hotelling Supplement Contributions paid.">HSC Paid</span><span id="s3-fees-hsc">$0</span></div>
+                                    <div class="sub-metric"><span data-tooltip="Total Daily Accommodation Payments calculated from unpaid RAD amounts.">DAP Paid</span><span id="s3-fees-dap">$0</span></div>
+                            </div>
+                            <div class="metric has-breakdown">
+                                <span class="label" data-tooltip="The physical cash remaining after all fees and expenses are paid at the end of the duration.">Ending Cash Balance</span>
+                                <span class="value" id="s3-cash">$0</span>
+                            </div>
+                            <div class="sub-metrics">
+                                <div class="sub-metric"><span style="color: var(--color-text-muted);" data-tooltip="The total compounded rental income collected over the duration.">Total Rent Added</span><span id="s3-rent-added" style="color: var(--color-text-muted);">$0</span></div>
+                            </div>
+                            <div class="metric">
+                                <span class="label" data-tooltip="The final compounded value of the home based on your projected annual growth.">House Final Value</span>
+                                <span class="value" id="s3-house">$0</span>
+                            </div>
+                            <div class="metric">
+                                <span class="label" data-tooltip="The final combined value of all your remaining cash, refunded deposits, and property value (if applicable) at the end of the timeframe.">Net Wealth Position</span>
+                                <span class="value highlight" id="s3-net">$0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Year on Year Table & Chart -->
+            <section class="panel glass-panel table-panel">
+                <div class="panel-header tabs-header">
+                    <h2>Year-on-Year Net Wealth Comparison</h2>
+                    <div class="tabs">
+                        <button class="tab-btn active" id="tab-table">Table</button>
+                        <button class="tab-btn" id="tab-chart">Chart</button>
+                    </div>
+                </div>
+                
+                <div id="content-table" class="tab-content active">
+                    <div class="table-responsive">
+                        <table class="yoy-table">
+                            <thead>
+                                <tr>
+                                    <th>Year</th>
+                                    <th>Scenario 1 (Sell)</th>
+                                    <th>Scenario 2 (Keep)</th>
+                                    <th id="s3-th">Scenario 3 (Rent)</th>
+                                    <th>S3 Annual Rent</th>
+                                </tr>
+                            </thead>
+                            <tbody id="yoy-tbody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="content-chart" class="tab-content" style="height: 400px; padding-top: 1rem; position: relative; width: 100%;">
+                    <canvas id="wealthChart"></canvas>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

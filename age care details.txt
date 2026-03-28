@@ -1,0 +1,44 @@
+I have combined the information from your uploaded documents into a single, clean text file.
+
+### **Aged Care Decisions: Combined Placement and Fees Guide**
+---
+
+#### **1. The 7-Step Process to Aged Care Placement**
+* **Step 1: Complete an Aged Care Assessment:** This determines if you are eligible for government-subsidised services through My Aged Care.
+* **Step 2: Assets and Income Assessment:** This determines your financial contribution toward fees; if not completed, you may be charged maximum fees.
+* **Step 3: Learn About Fees & Contributions:** Understand the specific costs associated with your care level and entry date.
+* **Step 4: Understand Respite Care:** This is a temporary short stay often used as a "trial run" for permanent care.
+* **Step 5: Shortlist Your Options:** Use vacancy matching based on location, budget, and care needs to find suitable facilities.
+* **Step 6: Book Facility Tours:** Visit facilities between 10:30 am and 12:30 pm to observe social activities and staffing.
+* **Step 7: Make an Application:** Complete applications for your preferred facilities once you have your assessment results.
+
+---
+
+#### **2. Fee Structures (Post 1 November 2025)**
+For residents entering on or after 1 November 2025, the following fees apply:
+* **Basic Daily Fee:** $65.55 per day. This covers living costs and is not means tested.
+* **Non-Clinical Care Contribution (NCCC):** Replaces the old Means Tested Care Fee. The daily cap is $105.30 and is based on income and assets.
+* **Hotelling Supplement Contribution (HSC):** Daily cap of $22.15. This covers meals, laundry, and utilities.
+* **Accommodation Payment:** The cost of the room, paid via a RAD (lump sum) or DAP (daily payment).
+    * **RAD Retention:** Providers may retain up to 2% per year of a RAD for up to five years (maximum 10%).
+    * **DAP Calculation:** $$(Unpaid\ RAD \times MPIR) \div 365$$ The current MPIR is 7.61%.
+
+---
+
+#### **3. Grandfathered Fees (Pre 1 November 2025)**
+Residents who entered before 1 November 2025 remain on the old fee system:
+* **Means Tested Care Fee:** Covers healthcare costs for residents with over $34,762 annual income or $63,000 in assets.
+* **Accommodation Payment:** RAD payments are fully refundable upon moving out, without the new retention rules.
+
+---
+
+#### **4. Property and Pension Considerations**
+* **Protected Person:** A family home is not counted as an asset if a spouse or "protected person" remains living there.
+* **Two-Year Exemption:** The home is exempt from the pension assets test for two years after moving into care.
+* **Selling the Home:** Proceeds from a home sale likely impact your assets/income test and pension eligibility.
+
+---
+
+**Confidence Level:** 5/5
+
+Would you like me to create a simplified version of this guide specifically for a family member or carer?
