@@ -63,7 +63,29 @@
                             <div class="advanced-inputs-grid">
                                 <div class="input-group">
                                     <label for="rad" data-tooltip="The full Refundable Accommodation Deposit quoted by the aged care facility.">RAD Required ($)</label>
-                                    <input type="text" inputmode="decimal" id="rad" value="470,000">
+                                    <select id="radPreset" class="custom-select">
+                                        <option value="">-- Custom Manual Entry --</option>
+                                        <option value="625000">Birralee, Innaloo – Single ($625,000)</option>
+                                        <option value="525000">Inglewood – Classic, Single ($525,000)</option>
+                                        <option value="575000">Inglewood - Classic Plus, Single ($575,000)</option>
+                                        <option value="675000">Inglewood – Deluxe, Single ($675,000)</option>
+                                        <option value="775000">Inglewood – Platinum, Single ($775,000)</option>
+                                        <option value="575000">Madeley – Classic, Single ($575,000)</option>
+                                        <option value="600000">Madeley – Deluxe, Single ($600,000)</option>
+                                        <option value="450000">Onslow Gardens, Subiaco – Shared ($450,000)</option>
+                                        <option value="675000">Onslow Gardens, Subiaco – Single ($675,000)</option>
+                                        <option value="350000">Oxford Gardens, Joondalup – Shared ($350,000)</option>
+                                        <option value="495000">Oxford Gardens, Joondalup – Classic, Single ($495,000)</option>
+                                        <option value="525000">Oxford Gardens, Joondalup – Deluxe, Single ($525,000)</option>
+                                        <option value="450000">Redcliffe – Classic, Single ($450,000)</option>
+                                        <option value="475000">Redcliffe – Deluxe, Single ($475,000)</option>
+                                        <option value="575000">The Cove, Mandurah – Single ($575,000)</option>
+                                        <option value="320000">The Oaks, Waikiki – Shared ($320,000)</option>
+                                        <option value="495000">The Oaks, Waikiki – Single ($495,000)</option>
+                                        <option value="575000">The Village, Inglewood – Single ($575,000)</option>
+                                        <option value="625000">The Village, Inglewood – Large Single ($625,000)</option>
+                                    </select>
+                                    <input type="text" inputmode="decimal" id="rad" value="470,000" placeholder="Custom RAD Amount">
                                 </div>
                                 <div class="input-group">
                                     <label for="mpir" data-tooltip="Maximum Permissible Interest Rate, government-set rate used to calculate Daily Accommodation Payments for unpaid RAD.">MPIR (%)</label>
@@ -80,6 +102,10 @@
                                 <div class="input-group">
                                     <label for="hscFee" data-tooltip="Hotelling Supplement Contribution (Max $22.15/day)">HSC Fee ($/day)</label>
                                     <input type="text" inputmode="decimal" id="hscFee" value="22.15">
+                                </div>
+                                <div class="input-group">
+                                    <label for="wcfFee" data-tooltip="Wellbeing Choice Fee / Higher Everyday Living Fee. Optional additional daily fee for enhanced living services.">Wellbeing Choice Fee ($/day)</label>
+                                    <input type="text" inputmode="decimal" id="wcfFee" value="0.00">
                                 </div>
                             </div>
                         </details>
@@ -105,6 +131,7 @@
                             </div>
                             <div class="sub-metrics">
                                     <div class="sub-metric"><span data-tooltip="Total mandatory living cost fee paid over the duration.">Basic Daily Fees</span><span id="s1-fees-basic">$0</span></div>
+                                    <div class="sub-metric"><span data-tooltip="Total Wellbeing Choice/Higher Everyday Living Fees paid.">Wellbeing Choice Fee</span><span id="s1-fees-wcf">$0</span></div>
                                     <div class="sub-metric"><span data-tooltip="Total Non-Clinical Care Contributions paid (Capped mathematically).">NCCC Paid</span><span id="s1-fees-nccc">$0</span></div>
                                     <div class="sub-metric"><span data-tooltip="Total uncapped Hotelling Supplement Contributions paid.">HSC Paid</span><span id="s1-fees-hsc">$0</span></div>
                                     <div class="sub-metric"><span data-tooltip="Total Daily Accommodation Payments calculated from unpaid RAD amounts.">DAP Paid</span><span id="s1-fees-dap">$0</span></div>
@@ -136,6 +163,7 @@
                             </div>
                             <div class="sub-metrics">
                                     <div class="sub-metric"><span data-tooltip="Total mandatory living cost fee paid over the duration.">Basic Daily Fees</span><span id="s2-fees-basic">$0</span></div>
+                                    <div class="sub-metric"><span data-tooltip="Total Wellbeing Choice/Higher Everyday Living Fees paid.">Wellbeing Choice Fee</span><span id="s2-fees-wcf">$0</span></div>
                                     <div class="sub-metric"><span data-tooltip="Total Non-Clinical Care Contributions paid (Capped mathematically).">NCCC Paid</span><span id="s2-fees-nccc">$0</span></div>
                                     <div class="sub-metric"><span data-tooltip="Total uncapped Hotelling Supplement Contributions paid.">HSC Paid</span><span id="s2-fees-hsc">$0</span></div>
                                     <div class="sub-metric"><span data-tooltip="Total Daily Accommodation Payments calculated from unpaid RAD amounts.">DAP Paid</span><span id="s2-fees-dap">$0</span></div>
@@ -166,6 +194,7 @@
                             </div>
                             <div class="sub-metrics">
                                     <div class="sub-metric"><span data-tooltip="Total mandatory living cost fee paid over the duration.">Basic Daily Fees</span><span id="s3-fees-basic">$0</span></div>
+                                    <div class="sub-metric"><span data-tooltip="Total Wellbeing Choice/Higher Everyday Living Fees paid.">Wellbeing Choice Fee</span><span id="s3-fees-wcf">$0</span></div>
                                     <div class="sub-metric"><span data-tooltip="Total Non-Clinical Care Contributions paid (Capped mathematically).">NCCC Paid</span><span id="s3-fees-nccc">$0</span></div>
                                     <div class="sub-metric"><span data-tooltip="Total uncapped Hotelling Supplement Contributions paid.">HSC Paid</span><span id="s3-fees-hsc">$0</span></div>
                                     <div class="sub-metric"><span data-tooltip="Total Daily Accommodation Payments calculated from unpaid RAD amounts.">DAP Paid</span><span id="s3-fees-dap">$0</span></div>

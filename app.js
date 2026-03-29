@@ -11,7 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
         mpir: document.getElementById('mpir'),
         basicFee: document.getElementById('basicFee'),
         ncccFee: document.getElementById('ncccFee'),
-        hscFee: document.getElementById('hscFee')
+        hscFee: document.getElementById('hscFee'),
+        wcfFee: document.getElementById('wcfFee')
     };
 
     function parseInput(inputElement) {
@@ -71,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         s1Fees: document.getElementById('s1-fees'),
         s1FeesBasic: document.getElementById('s1-fees-basic'),
+        s1FeesWcf: document.getElementById('s1-fees-wcf'),
         s1FeesNccc: document.getElementById('s1-fees-nccc'),
         s1FeesHsc: document.getElementById('s1-fees-hsc'),
         s1FeesDap: document.getElementById('s1-fees-dap'),
@@ -81,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         s2Fees: document.getElementById('s2-fees'),
         s2FeesBasic: document.getElementById('s2-fees-basic'),
+        s2FeesWcf: document.getElementById('s2-fees-wcf'),
         s2FeesNccc: document.getElementById('s2-fees-nccc'),
         s2FeesHsc: document.getElementById('s2-fees-hsc'),
         s2FeesDap: document.getElementById('s2-fees-dap'),
@@ -90,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         s3Fees: document.getElementById('s3-fees'),
         s3FeesBasic: document.getElementById('s3-fees-basic'),
+        s3FeesWcf: document.getElementById('s3-fees-wcf'),
         s3FeesNccc: document.getElementById('s3-fees-nccc'),
         s3FeesHsc: document.getElementById('s3-fees-hsc'),
         s3FeesDap: document.getElementById('s3-fees-dap'),
@@ -122,7 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
             mpir: parseInput(inputs.mpir) / 100,
             basicFee: parseInput(inputs.basicFee),
             ncccFee: parseInput(inputs.ncccFee),
-            hscFee: parseInput(inputs.hscFee)
+            hscFee: parseInput(inputs.hscFee),
+            wcfFee: parseInput(inputs.wcfFee)
         };
 
         // Save inputs to localStorage
@@ -136,6 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const daysInYear = 365.25;
 
         let totalBasicFees = 0;
+        let totalWcfFeesPaid = 0;
         let totalNcccFeesPaid = 0;
         let totalHscFeesPaid = 0;
         
@@ -145,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let year = 1; year <= vals.duration; year++) {
             let basicThisYear = vals.basicFee * daysInYear;
+            let wcfThisYear = vals.wcfFee * daysInYear;
             let hscThisYear = vals.hscFee * daysInYear;
             let ncccThisYear = 0;
             
@@ -159,10 +166,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 runningNcccPaid += ncccThisYear;
             }
             
-            let totalCareThisYear = basicThisYear + ncccThisYear + hscThisYear;
+            let totalCareThisYear = basicThisYear + wcfThisYear + ncccThisYear + hscThisYear;
             annualCareFeesArray.push(totalCareThisYear);
             
             totalBasicFees += basicThisYear;
+            totalWcfFeesPaid += wcfThisYear;
             totalNcccFeesPaid += ncccThisYear;
             totalHscFeesPaid += hscThisYear;
         }
@@ -204,6 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         outputs.s1Fees.textContent = formatCurrency(s1FeesPaid);
         outputs.s1FeesBasic.textContent = formatCurrency(totalBasicFees);
+        outputs.s1FeesWcf.textContent = formatCurrency(totalWcfFeesPaid);
         outputs.s1FeesNccc.textContent = formatCurrency(totalNcccFeesPaid);
         outputs.s1FeesHsc.textContent = formatCurrency(totalHscFeesPaid);
         outputs.s1FeesDap.textContent = formatCurrency(s1DapPerYear * vals.duration);
@@ -233,6 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         outputs.s2Fees.textContent = formatCurrency(s2FeesPaid);
         outputs.s2FeesBasic.textContent = formatCurrency(totalBasicFees);
+        outputs.s2FeesWcf.textContent = formatCurrency(totalWcfFeesPaid);
         outputs.s2FeesNccc.textContent = formatCurrency(totalNcccFeesPaid);
         outputs.s2FeesHsc.textContent = formatCurrency(totalHscFeesPaid);
         outputs.s2FeesDap.textContent = formatCurrency(s2DapPerYear * vals.duration);
@@ -269,6 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         outputs.s3Fees.textContent = formatCurrency(s3FeesPaid);
         outputs.s3FeesBasic.textContent = formatCurrency(totalBasicFees);
+        outputs.s3FeesWcf.textContent = formatCurrency(totalWcfFeesPaid);
         outputs.s3FeesNccc.textContent = formatCurrency(totalNcccFeesPaid);
         outputs.s3FeesHsc.textContent = formatCurrency(totalHscFeesPaid);
         outputs.s3FeesDap.textContent = formatCurrency(s3DapPerYear * vals.duration);
@@ -437,6 +448,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         }
+    }
+
+    // Preset Option Listener
+    const radPreset = document.getElementById('radPreset');
+    if (radPreset && inputs.rad) {
+        radPreset.addEventListener('change', (e) => {
+            if (e.target.value) {
+                inputs.rad.value = formatNumberInput(e.target.value);
+                calculate();
+            }
+        });
+
+        inputs.rad.addEventListener('input', () => {
+            radPreset.value = "";
+        });
     }
 
     // Attach listeners

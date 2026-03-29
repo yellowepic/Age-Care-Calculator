@@ -255,7 +255,8 @@ body {
     bottom: 110%;
 }
 
-.input-group input {
+.input-group input,
+.input-group select {
     background: rgba(2, 6, 23, 0.5);
     border: 1px solid var(--color-glass-border);
     border-radius: var(--border-radius-sm);
@@ -267,7 +268,19 @@ body {
     outline: none;
 }
 
-.input-group input:focus {
+.input-group select {
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.input-group select option {
+    background: #0f172a;
+    color: #fff;
+    padding: 0.5rem;
+}
+
+.input-group input:focus,
+.input-group select:focus {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px var(--color-primary-glow);
     background: rgba(2, 6, 23, 0.8);
