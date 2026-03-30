@@ -44,29 +44,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Tab Listeners
-    const tabTable = document.getElementById('tab-table');
+    const tabSummary = document.getElementById('tab-summary');
+    const tabDetail = document.getElementById('tab-detail');
     const tabChart = document.getElementById('tab-chart');
-    const contentTable = document.getElementById('content-table');
+    const contentSummary = document.getElementById('content-summary');
+    const contentDetail = document.getElementById('content-detail');
     const contentChart = document.getElementById('content-chart');
 
-    if (tabTable && tabChart) {
-        tabTable.addEventListener('click', () => {
-            tabTable.classList.add('active');
-            tabChart.classList.remove('active');
-            contentTable.classList.add('active');
-            contentChart.classList.remove('active');
+    const switchTab = (activeTab, activeContent) => {
+        [tabSummary, tabDetail, tabChart].forEach(btn => {
+            if (btn) btn.classList.remove('active');
         });
-        tabChart.addEventListener('click', () => {
-            tabChart.classList.add('active');
-            tabTable.classList.remove('active');
-            contentChart.classList.add('active');
-            contentTable.classList.remove('active');
-            
-            if (window.wealthChartInstance) {
-                window.wealthChartInstance.resize();
-            }
+        [contentSummary, contentDetail, contentChart].forEach(content => {
+            if (content) content.classList.remove('active');
         });
-    }
+        
+        if (activeTab) activeTab.classList.add('active');
+        if (activeContent) activeContent.classList.add('active');
+    };
+
+    if (tabSummary) tabSummary.addEventListener('click', () => switchTab(tabSummary, contentSummary));
+    if (tabDetail) tabDetail.addEventListener('click', () => switchTab(tabDetail, contentDetail));
+    if (tabChart) tabChart.addEventListener('click', () => {
+        switchTab(tabChart, contentChart);
+        if (window.wealthChartInstance) window.wealthChartInstance.resize();
+    });
 
     // Output elements
     const outputs = {
@@ -107,7 +109,8 @@ document.addEventListener('DOMContentLoaded', () => {
         s3House: document.getElementById('s3-house'),
         s3Net: document.getElementById('s3-net'),
         
-        yoyTbody: document.getElementById('yoy-tbody')
+        yoyTbodySummary: document.getElementById('yoy-tbody-summary'),
+        yoyTbodyDetail: document.getElementById('yoy-tbody-detail')
     };
 
     function formatCurrency(amount) {
@@ -352,14 +355,15 @@ document.addEventListener('DOMContentLoaded', () => {
         outputs.s3House.textContent = formatCurrency(s3HouseValueObj);
         outputs.s3Net.textContent = formatCurrency(s3NetWealth);
 
-        const s3Th = document.getElementById('s3-th');
-        if (s3Th) {
-            s3Th.innerHTML = `Scenario 3 (Rent)`;
-        }
+        const s3ThSummary = document.getElementById('s3-th-summary');
+        const s3ThDetail = document.getElementById('s3-th-detail');
+        if (s3ThSummary) s3ThSummary.innerHTML = `Scenario 3 (Rent)`;
+        if (s3ThDetail) s3ThDetail.innerHTML = `Scenario 3 (Rent)`;
 
-        // --- Render YoY Table ---
-        if (outputs.yoyTbody) {
-            outputs.yoyTbody.innerHTML = '';
+        // --- Render YoY Tables ---
+        if (outputs.yoyTbodySummary && outputs.yoyTbodyDetail) {
+            outputs.yoyTbodySummary.innerHTML = '';
+            outputs.yoyTbodyDetail.innerHTML = '';
             
             // Year 0 (Now)
             const initialNetWealth = vals.savings + vals.houseValue;
@@ -371,55 +375,64 @@ document.addEventListener('DOMContentLoaded', () => {
             let s2zClass = s2InitialCash < 0 ? 'negative-cash' : '';
             let s3zClass = s3InitialCash < 0 ? 'negative-cash' : '';
 
-            let s1zHtml = `<div style="margin-bottom: 4px;"><strong>${formatCurrency(initialNetWealth)}</strong></div>` +
-                          `<div style="font-size: 0.85em; color: var(--color-text-muted); line-height: 1.4;">Cash: ${formatCurrency(s1InitialCash)}<br>RAD: ${formatCurrency(Math.min(vals.savings + vals.houseValue, vals.rad))}</div>` + 
-                          (s1InitialCash < 0 ? '<span class="out-of-cash-badge" style="margin-top: 4px;">Out of Cash</span>' : '');
-            
-            let s2zHtml = `<div style="margin-bottom: 4px;"><strong>${formatCurrency(initialNetWealth)}</strong></div>` +
-                          `<div style="font-size: 0.85em; color: var(--color-text-muted); line-height: 1.4;">Cash: ${formatCurrency(s2InitialCash)}<br>House: ${formatCurrency(vals.houseValue)}</div>` + 
-                          (s2InitialCash < 0 ? '<span class="out-of-cash-badge" style="margin-top: 4px;">Out of Cash</span>' : '');
-            
-            let s3zHtml = `<div style="margin-bottom: 4px;"><strong>${formatCurrency(initialNetWealth)}</strong></div>` +
-                          `<div style="font-size: 0.85em; color: var(--color-text-muted); line-height: 1.4;">Cash: ${formatCurrency(s3InitialCash)}<br>House: ${formatCurrency(vals.houseValue)}</div>` + 
-                          (s3InitialCash < 0 ? '<span class="out-of-cash-badge" style="margin-top: 4px;">Out of Cash</span>' : '');
+            // Summary Strings (Net Wealth Only)
+            let s1zSum = formatCurrency(initialNetWealth) + (s1InitialCash < 0 ? ' <br><span class="out-of-cash-badge">Out of Cash</span>' : '');
+            let s2zSum = formatCurrency(initialNetWealth) + (s2InitialCash < 0 ? ' <br><span class="out-of-cash-badge">Out of Cash</span>' : '');
+            let s3zSum = formatCurrency(initialNetWealth) + (s3InitialCash < 0 ? ' <br><span class="out-of-cash-badge">Out of Cash</span>' : '');
 
-            const tr0 = document.createElement('tr');
-            tr0.innerHTML = `
-                <td>Now (Year 0)</td>
-                <td class="${s1zClass}">${s1zHtml}</td>
-                <td class="${s2zClass}">${s2zHtml}</td>
-                <td class="${s3zClass}">${s3zHtml}</td>
-                <td style="color: var(--color-text-muted);">-</td>
-            `;
-            outputs.yoyTbody.appendChild(tr0);
+            // Detail Strings (Net Wealth + Breakdown)
+            let s1zDet = `<div style="margin-bottom: 4px;"><strong>${formatCurrency(initialNetWealth)}</strong></div>` +
+                         `<div style="font-size: 0.85em; color: var(--color-text-muted); line-height: 1.4;">Cash: ${formatCurrency(s1InitialCash)}<br>RAD: ${formatCurrency(Math.min(vals.savings + vals.houseValue, vals.rad))}</div>` + 
+                         (s1InitialCash < 0 ? '<span class="out-of-cash-badge" style="margin-top: 4px;">Out of Cash</span>' : '');
+            
+            let s2zDet = `<div style="margin-bottom: 4px;"><strong>${formatCurrency(initialNetWealth)}</strong></div>` +
+                         `<div style="font-size: 0.85em; color: var(--color-text-muted); line-height: 1.4;">Cash: ${formatCurrency(s2InitialCash)}<br>House: ${formatCurrency(vals.houseValue)}</div>` + 
+                         (s2InitialCash < 0 ? '<span class="out-of-cash-badge" style="margin-top: 4px;">Out of Cash</span>' : '');
+            
+            let s3zDet = `<div style="margin-bottom: 4px;"><strong>${formatCurrency(initialNetWealth)}</strong></div>` +
+                         `<div style="font-size: 0.85em; color: var(--color-text-muted); line-height: 1.4;">Cash: ${formatCurrency(s3InitialCash)}<br>House: ${formatCurrency(vals.houseValue)}</div>` + 
+                         (s3InitialCash < 0 ? '<span class="out-of-cash-badge" style="margin-top: 4px;">Out of Cash</span>' : '');
 
+            // Append Year 0
+            const tr0Sum = document.createElement('tr');
+            tr0Sum.innerHTML = `<td>Now (Year 0)</td><td class="${s1zClass}">${s1zSum}</td><td class="${s2zClass}">${s2zSum}</td><td class="${s3zClass}">${s3zSum}</td><td style="color: var(--color-text-muted);">-</td>`;
+            outputs.yoyTbodySummary.appendChild(tr0Sum);
+
+            const tr0Det = document.createElement('tr');
+            tr0Det.innerHTML = `<td>Now (Year 0)</td><td class="${s1zClass}">${s1zDet}</td><td class="${s2zClass}">${s2zDet}</td><td class="${s3zClass}">${s3zDet}</td><td style="color: var(--color-text-muted);">-</td>`;
+            outputs.yoyTbodyDetail.appendChild(tr0Det);
+
+            // Output Dynamic Matrix
             for(let i = 0; i < vals.duration; i++) {
-                const tr = document.createElement('tr');
                 let s1c = yoyS1[i].cash < 0 ? 'negative-cash' : '';
                 let s2c = yoyS2[i].cash < 0 ? 'negative-cash' : '';
                 let s3c = yoyS3[i].cash < 0 ? 'negative-cash' : '';
 
-                let s1h = `<div style="margin-bottom: 4px;"><strong>${formatCurrency(yoyS1[i].netWealth)}</strong></div>` +
-                          `<div style="font-size: 0.85em; color: var(--color-text-muted); line-height: 1.4;">Cash: ${formatCurrency(yoyS1[i].cash)}<br>RAD: ${formatCurrency(yoyS1[i].radRefund)}</div>` +
-                          (yoyS1[i].cash < 0 ? '<span class="out-of-cash-badge" style="margin-top: 4px;">Out of Cash</span>' : '');
+                // Summary HTML
+                let s1Sum = formatCurrency(yoyS1[i].netWealth) + (yoyS1[i].cash < 0 ? ' <br><span class="out-of-cash-badge">Out of Cash</span>' : '');
+                let s2Sum = formatCurrency(yoyS2[i].netWealth) + (yoyS2[i].cash < 0 ? ' <br><span class="out-of-cash-badge">Out of Cash</span>' : '');
+                let s3Sum = formatCurrency(yoyS3[i].netWealth) + (yoyS3[i].cash < 0 ? ' <br><span class="out-of-cash-badge">Out of Cash</span>' : '');
 
-                // For S2/S3 we deduce House Value by subtracting Cash from Net Wealth mathematically (to ensure exact match with compounding)
-                let s2h = `<div style="margin-bottom: 4px;"><strong>${formatCurrency(yoyS2[i].netWealth)}</strong></div>` +
-                          `<div style="font-size: 0.85em; color: var(--color-text-muted); line-height: 1.4;">Cash: ${formatCurrency(yoyS2[i].cash)}<br>House: ${formatCurrency(yoyS2[i].netWealth - yoyS2[i].cash)}</div>` +
-                          (yoyS2[i].cash < 0 ? '<span class="out-of-cash-badge" style="margin-top: 4px;">Out of Cash</span>' : '');
+                // Detail HTML
+                let s1Det = `<div style="margin-bottom: 4px;"><strong>${formatCurrency(yoyS1[i].netWealth)}</strong></div>` +
+                            `<div style="font-size: 0.85em; color: var(--color-text-muted); line-height: 1.4;">Cash: ${formatCurrency(yoyS1[i].cash)}<br>RAD: ${formatCurrency(yoyS1[i].radRefund)}</div>` +
+                            (yoyS1[i].cash < 0 ? '<span class="out-of-cash-badge" style="margin-top: 4px;">Out of Cash</span>' : '');
                 
-                let s3h = `<div style="margin-bottom: 4px;"><strong>${formatCurrency(yoyS3[i].netWealth)}</strong></div>` +
-                          `<div style="font-size: 0.85em; color: var(--color-text-muted); line-height: 1.4;">Cash: ${formatCurrency(yoyS3[i].cash)}<br>House: ${formatCurrency(yoyS3[i].netWealth - yoyS3[i].cash)}</div>` +
-                          (yoyS3[i].cash < 0 ? '<span class="out-of-cash-badge" style="margin-top: 4px;">Out of Cash</span>' : '');
+                let s2Det = `<div style="margin-bottom: 4px;"><strong>${formatCurrency(yoyS2[i].netWealth)}</strong></div>` +
+                            `<div style="font-size: 0.85em; color: var(--color-text-muted); line-height: 1.4;">Cash: ${formatCurrency(yoyS2[i].cash)}<br>House: ${formatCurrency(yoyS2[i].netWealth - yoyS2[i].cash)}</div>` +
+                            (yoyS2[i].cash < 0 ? '<span class="out-of-cash-badge" style="margin-top: 4px;">Out of Cash</span>' : '');
+                
+                let s3Det = `<div style="margin-bottom: 4px;"><strong>${formatCurrency(yoyS3[i].netWealth)}</strong></div>` +
+                            `<div style="font-size: 0.85em; color: var(--color-text-muted); line-height: 1.4;">Cash: ${formatCurrency(yoyS3[i].cash)}<br>House: ${formatCurrency(yoyS3[i].netWealth - yoyS3[i].cash)}</div>` +
+                            (yoyS3[i].cash < 0 ? '<span class="out-of-cash-badge" style="margin-top: 4px;">Out of Cash</span>' : '');
 
-                tr.innerHTML = `
-                    <td>Year ${i + 1}</td>
-                    <td class="${s1c}">${s1h}</td>
-                    <td class="${s2c}">${s2h}</td>
-                    <td class="${s3c}">${s3h}</td>
-                    <td style="color: var(--color-secondary); opacity: 0.9;">+${formatCurrency(yoyS3[i].rentIncome)}</td>
-                `;
-                outputs.yoyTbody.appendChild(tr);
+                const trSum = document.createElement('tr');
+                trSum.innerHTML = `<td>Year ${i + 1}</td><td class="${s1c}">${s1Sum}</td><td class="${s2c}">${s2Sum}</td><td class="${s3c}">${s3Sum}</td><td style="color: var(--color-secondary); opacity: 0.9;">+${formatCurrency(yoyS3[i].rentIncome)}</td>`;
+                outputs.yoyTbodySummary.appendChild(trSum);
+
+                const trDet = document.createElement('tr');
+                trDet.innerHTML = `<td>Year ${i + 1}</td><td class="${s1c}">${s1Det}</td><td class="${s2c}">${s2Det}</td><td class="${s3c}">${s3Det}</td><td style="color: var(--color-secondary); opacity: 0.9;">+${formatCurrency(yoyS3[i].rentIncome)}</td>`;
+                outputs.yoyTbodyDetail.appendChild(trDet);
             }
         }
 

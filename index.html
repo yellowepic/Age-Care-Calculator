@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css?v=1.1.0">
+    <link rel="stylesheet" href="styles.css?v=1.2.0">
 </head>
 <body>
     <div class="background-elements">
@@ -245,12 +245,13 @@
                 <div class="panel-header tabs-header">
                     <h2>Year-on-Year Net Wealth Comparison</h2>
                     <div class="tabs">
-                        <button class="tab-btn active" id="tab-table">Table</button>
+                        <button class="tab-btn active" id="tab-summary">Summary</button>
+                        <button class="tab-btn" id="tab-detail">Detail</button>
                         <button class="tab-btn" id="tab-chart">Chart</button>
                     </div>
                 </div>
                 
-                <div id="content-table" class="tab-content active">
+                <div id="content-summary" class="tab-content active">
                     <div class="table-responsive">
                         <table class="yoy-table">
                             <thead>
@@ -258,11 +259,30 @@
                                     <th>Year</th>
                                     <th>Scenario 1 (Sell)</th>
                                     <th>Scenario 2 (Keep)</th>
-                                    <th id="s3-th">Scenario 3 (Rent)</th>
+                                    <th id="s3-th-summary">Scenario 3 (Rent)</th>
                                     <th>S3 Annual Rent</th>
                                 </tr>
                             </thead>
-                            <tbody id="yoy-tbody">
+                            <tbody id="yoy-tbody-summary">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="content-detail" class="tab-content">
+                    <div class="table-responsive">
+                        <table class="yoy-table">
+                            <thead>
+                                <tr>
+                                    <th>Year</th>
+                                    <th>Scenario 1 (Sell)</th>
+                                    <th>Scenario 2 (Keep)</th>
+                                    <th id="s3-th-detail">Scenario 3 (Rent)</th>
+                                    <th>S3 Annual Rent</th>
+                                </tr>
+                            </thead>
+                            <tbody id="yoy-tbody-detail">
                                 <!-- Populated dynamically -->
                             </tbody>
                         </table>
@@ -277,6 +297,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="app.js?v=1.1.0"></script>
+    <script src="app.js?v=1.2.0"></script>
 </body>
 </html>
