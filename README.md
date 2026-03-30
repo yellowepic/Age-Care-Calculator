@@ -13,6 +13,10 @@ A comprehensive, responsive web application built for calculating, comparing, an
   * **NCCC vs HSC**: Distinguishes between Non-Clinical Care Contributions (NCCC)—which are dynamically capped at $135,318.69 or 4 years—and uncapped Hotelling Supplement Contributions (HSC).
   * **Optional Fees**: Integrates continuous compounding for standard Basic Daily Fees and optional Wellbeing Choice/Higher Everyday Living Fees.
 * **Year-on-Year Projections**: Leverages dynamic table generation and interactive `Chart.js` rendering to graph projected **Net Wealth** trajectories over customized spans (1–20 years).
+* **Single Age Pension Engine**: A fully native integration of the **March 2026 Services Australia Age Pension rules (Single Person)**.
+  * **Dual-Test Algorithm**: Automatically computes both the Assets Test (with $3 per $1000 taper) and Income Test (with dynamic deeming rules and 50c taper) simultaneously, dynamically granting the lower pension amount.
+  * **RAD Exemption Matrix**: Accurately recognizes that paying a RAD completely shields that capital from pension testing, massively boosting pension payouts under Scenario 1.
+  * **2-Year Home Exemption**: Smart logic rigorously applies the 2-Year former home exemption for single pensioners entering care under Scenarios 2 and 3 before aggressively applying the Non-Homeowner Asset Test limit in Year 3.
 * **Negative Cash Protection**: Real-time logic intelligently flags scenarios with a visual red alert if physical cash reserves are mathematically depleted. 
 * **State Persistence**: Native browser `localStorage` integration secures your input state perfectly between sessions.
 
@@ -22,13 +26,22 @@ A comprehensive, responsive web application built for calculating, comparing, an
 * **Styling Matrix**: Distinctive premium Glassmorphism aesthetic operating on custom CSS variables, translucent panels, and responsive grid arrangements.
 * **Data Visualization**: Dynamic trajectory graphing driven by `Chart.js` (via CDN).
 
-## 🚀 Getting Started
+## 🚀 Accessing the Calculator
 
-This application requires absolutely zero build tools, node modules, or compile scripts. It runs entirely on client-side technologies.
+Because this application requires zero build tools or complex backend servers, it is designed to be hosted entirely for free via **GitHub Pages**. This creates a live, public website you can instantly bookmark on your phone or laptop.
+
+### Method 1: Host Live via GitHub Pages (Recommended)
+1. In your GitHub repository, click the **Settings** tab.
+2. On the left sidebar menu, click **Pages**.
+3. Under "Build and deployment" > "Source", select the **Branch** dropdown, choose `master` (or `main`), and hit **Save**.
+4. GitHub will automatically deploy the site. Refresh the page after 1-2 minutes to receive your live web URL (e.g. `https://your-username.github.io/Age-Care-Calculator/`).
+5. Open that link on **any device**—the responsive CSS will natively adapt to both narrow smartphones and wide desktop monitors!
+
+### Method 2: Run Locally (Offline)
 1. Clone or download this repository to your local machine.
 2. Double-click `index.html` to open it in any standard modern web browser (Google Chrome, Safari, Firefox, Edge).
-3. The calculator works natively offline with instant scenario switching!
+3. The calculator works completely offline!
 
 ## 📄 Disclaimer
 
-This calculator was meticulously designed to model aged care scenarios based on public parameters but is built exclusively for **educational and estimation purposes**. It does not consider Age Pension centerlink interactions or specialized two-year home exemptions. It should **not** substitute formal financial advice from a registered financial planner or an accountant.
+This calculator was meticulously designed to model aged care scenarios based on public parameters but is built exclusively for **educational and estimation purposes**. It should **not** substitute formal financial advice from a registered financial planner or an accountant.

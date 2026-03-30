@@ -12,7 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
         basicFee: document.getElementById('basicFee'),
         ncccFee: document.getElementById('ncccFee'),
         hscFee: document.getElementById('hscFee'),
-        wcfFee: document.getElementById('wcfFee')
+        wcfFee: document.getElementById('wcfFee'),
+        otherAssets: document.getElementById('otherAssets'),
+        otherIncome: document.getElementById('otherIncome')
     };
 
     function parseInput(inputElement) {
@@ -78,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         s1FeesDap: document.getElementById('s1-fees-dap'),
         s1FeesRad: document.getElementById('s1-fees-rad'),
         s1Cash: document.getElementById('s1-cash'),
+        s1Pension: document.getElementById('s1-pension'),
         s1RadRefund: document.getElementById('s1-rad-refund'),
         s1Net: document.getElementById('s1-net'),
         
@@ -88,6 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         s2FeesHsc: document.getElementById('s2-fees-hsc'),
         s2FeesDap: document.getElementById('s2-fees-dap'),
         s2Cash: document.getElementById('s2-cash'),
+        s2Pension: document.getElementById('s2-pension'),
         s2House: document.getElementById('s2-house'),
         s2Net: document.getElementById('s2-net'),
 
@@ -99,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
         s3FeesDap: document.getElementById('s3-fees-dap'),
         s3Cash: document.getElementById('s3-cash'),
         s3RentAdded: document.getElementById('s3-rent-added'),
+        s3Pension: document.getElementById('s3-pension'),
         s3House: document.getElementById('s3-house'),
         s3Net: document.getElementById('s3-net'),
         
@@ -127,7 +132,9 @@ document.addEventListener('DOMContentLoaded', () => {
             basicFee: parseInput(inputs.basicFee),
             ncccFee: parseInput(inputs.ncccFee),
             hscFee: parseInput(inputs.hscFee),
-            wcfFee: parseInput(inputs.wcfFee)
+            wcfFee: parseInput(inputs.wcfFee),
+            otherAssets: parseInput(inputs.otherAssets),
+            otherIncome: parseInput(inputs.otherIncome)
         };
 
         // Save inputs to localStorage
@@ -179,6 +186,29 @@ document.addEventListener('DOMContentLoaded', () => {
         let yoyS2 = [];
         let yoyS3 = [];
 
+        // --- Age Pension Processing (Single logic with March 2026 thresholds) ---
+        function getAgePension(cash, isHomeowner, otherAssets, otherIncomeFn) {
+            const MAX_PEN_FN = 1200.90;
+            const ASSET_HOME = 321500;
+            const ASSET_NON = 579500;
+            const INCOME_FREE = 218;
+            
+            // Assets Test Computation
+            let totalAssets = cash + otherAssets;
+            let aLimit = isHomeowner ? ASSET_HOME : ASSET_NON;
+            let aExcess = Math.max(0, totalAssets - aLimit);
+            let aPenFn = Math.max(0, MAX_PEN_FN - (Math.floor(aExcess / 1000) * 3));
+
+            // Income Test Computation (using dynamic Deeming constraints)
+            let deemedAnn = (cash <= 64600) ? (cash * 0.0025) : ((64600 * 0.0025) + ((cash - 64600) * 0.0225));
+            let totalIncFn = (deemedAnn / 26) + otherIncomeFn;
+            let iExcess = Math.max(0, totalIncFn - INCOME_FREE);
+            let iPenFn = Math.max(0, MAX_PEN_FN - (iExcess * 0.5));
+
+            // The Age Pension defaults to whichever dual-test yields the lowest outcome.
+            return Math.min(aPenFn, iPenFn) * 26;
+        }
+
         // --- Scenario 1: Sell House, Pay RAD ---
         let s1TotalCash = vals.savings + vals.houseValue;
         let s1RadPaid = Math.min(s1TotalCash, vals.rad);
@@ -191,8 +221,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let s1CurrentCash = s1TotalCash - s1RadPaid;
         let s1FeesPaid = 0;
+        let s1TotalPension = 0;
         
         for(let i = 1; i <= vals.duration; i++) {
+            // Non-homeowner limits (home was sold), RAD is completely exempt from testing.
+            let pensionThisYear = getAgePension(s1CurrentCash, false, vals.otherAssets, vals.otherIncome);
+            s1CurrentCash += pensionThisYear;
+            s1TotalPension += pensionThisYear;
+
             s1CurrentCash += s1CurrentCash * vals.interestRate;
             let annualFees = annualCareFeesArray[i - 1] + s1DapPerYear;
             s1CurrentCash -= annualFees;
@@ -220,6 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         outputs.s1Cash.textContent = formatCurrency(s1CurrentCash);
         outputs.s1Cash.className = 'value' + (s1CurrentCash < 0 ? ' negative-cash-text' : '');
+        outputs.s1Pension.textContent = formatCurrency(s1TotalPension);
         outputs.s1RadRefund.textContent = formatCurrency(s1RadRefund);
         outputs.s1Net.textContent = formatCurrency(s1NetWealth);
 
@@ -228,8 +265,18 @@ document.addEventListener('DOMContentLoaded', () => {
         let s2CurrentCash = vals.savings;
         let s2HouseValueObj = vals.houseValue;
         let s2FeesPaid = 0;
+        let s2TotalPension = 0;
 
         for(let i = 1; i <= vals.duration; i++) {
+            // Home is strictly exempt for the primary 2 years
+            let isExemptHome = (i <= 2);
+            let homeOwnerStatus = isExemptHome ? true : false;
+            let assessableHomeValue = isExemptHome ? 0 : s2HouseValueObj;
+            
+            let pensionThisYear = getAgePension(s2CurrentCash, homeOwnerStatus, vals.otherAssets + assessableHomeValue, vals.otherIncome);
+            s2CurrentCash += pensionThisYear;
+            s2TotalPension += pensionThisYear;
+
             s2HouseValueObj += s2HouseValueObj * vals.houseGrowth;
             s2CurrentCash += s2CurrentCash * vals.interestRate;
             let annualFees = annualCareFeesArray[i - 1] + s2DapPerYear;
@@ -249,6 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         outputs.s2Cash.textContent = formatCurrency(s2CurrentCash);
         outputs.s2Cash.className = 'value' + (s2CurrentCash < 0 ? ' negative-cash-text' : '');
+        outputs.s2Pension.textContent = formatCurrency(s2TotalPension);
         outputs.s2House.textContent = formatCurrency(s2HouseValueObj);
         outputs.s2Net.textContent = formatCurrency(s2NetWealth);
 
@@ -259,8 +307,19 @@ document.addEventListener('DOMContentLoaded', () => {
         let s3FeesPaid = 0;
         let currentRentPerYear = vals.houseRent * 52; 
         let s3TotalRentCollected = 0;
+        let s3TotalPension = 0;
 
         for(let i = 1; i <= vals.duration; i++) {
+            // Rental property is exempt from asset test for 2 years, but rent impacts the income test bounds natively.
+            let isExemptHome = (i <= 2);
+            let homeOwnerStatus = isExemptHome ? true : false;
+            let assessableHomeValue = isExemptHome ? 0 : s3HouseValueObj;
+            let fnRent = currentRentPerYear / 26;
+            
+            let pensionThisYear = getAgePension(s3CurrentCash, homeOwnerStatus, vals.otherAssets + assessableHomeValue, vals.otherIncome + fnRent);
+            s3CurrentCash += pensionThisYear;
+            s3TotalPension += pensionThisYear;
+
             s3HouseValueObj += s3HouseValueObj * vals.houseGrowth;
             s3CurrentCash += s3CurrentCash * vals.interestRate;
             s3CurrentCash += currentRentPerYear; 
@@ -289,6 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         outputs.s3Cash.textContent = formatCurrency(s3CurrentCash);
         outputs.s3Cash.className = 'value' + (s3CurrentCash < 0 ? ' negative-cash-text' : '');
+        outputs.s3Pension.textContent = formatCurrency(s3TotalPension);
         outputs.s3House.textContent = formatCurrency(s3HouseValueObj);
         outputs.s3Net.textContent = formatCurrency(s3NetWealth);
 

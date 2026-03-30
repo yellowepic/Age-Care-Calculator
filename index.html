@@ -109,6 +109,20 @@
                                 </div>
                             </div>
                         </details>
+                        
+                        <details class="advanced-inputs">
+                            <summary>Age Pension Data (Single Person)</summary>
+                            <div class="advanced-inputs-grid">
+                                <div class="input-group">
+                                    <label for="otherAssets" data-tooltip="Total value of other assessable assets (e.g. shares, cars, contents) excluding cash savings, the family home, and the RAD.">Other Assessable Assets ($)</label>
+                                    <input type="text" inputmode="decimal" id="otherAssets" value="0">
+                                </div>
+                                <div class="input-group">
+                                    <label for="otherIncome" data-tooltip="Total other fortnightly income (e.g. an overseas pension) used for the Income Test.">Other Fortnightly Income ($)</label>
+                                    <input type="text" inputmode="decimal" id="otherIncome" value="0">
+                                </div>
+                            </div>
+                        </details>
                     </div>
                 </form>
             </section>
@@ -137,9 +151,12 @@
                                     <div class="sub-metric"><span data-tooltip="Total Daily Accommodation Payments calculated from unpaid RAD amounts.">DAP Paid</span><span id="s1-fees-dap">$0</span></div>
                                 <div class="sub-metric"><span data-tooltip="Portion of the RAD kept by the facility (Max 10% over 5 yrs).">RAD Retained</span><span id="s1-fees-rad">$0</span></div>
                             </div>
-                            <div class="metric">
+                            <div class="metric has-breakdown">
                                 <span class="label" data-tooltip="The physical cash remaining after all fees and expenses are paid at the end of the duration.">Ending Cash Balance</span>
                                 <span class="value" id="s1-cash">$0</span>
+                            </div>
+                            <div class="sub-metrics">
+                                <div class="sub-metric"><span style="color: var(--color-accent);" data-tooltip="Full government Age Pension payments received (Single Rate) dynamically calculated against the Assets and Income dual-test.">Age Pension Received</span><span id="s1-pension" style="color: var(--color-accent);">$0</span></div>
                             </div>
                             <div class="metric">
                                 <span class="label" data-tooltip="The remaining portion of the RAD that will be returned to your estate.">Refundable Deposit</span>
@@ -168,9 +185,12 @@
                                     <div class="sub-metric"><span data-tooltip="Total uncapped Hotelling Supplement Contributions paid.">HSC Paid</span><span id="s2-fees-hsc">$0</span></div>
                                     <div class="sub-metric"><span data-tooltip="Total Daily Accommodation Payments calculated from unpaid RAD amounts.">DAP Paid</span><span id="s2-fees-dap">$0</span></div>
                             </div>
-                            <div class="metric">
+                            <div class="metric has-breakdown">
                                 <span class="label" data-tooltip="The physical cash remaining after all fees and expenses are paid at the end of the duration.">Ending Cash Balance</span>
                                 <span class="value" id="s2-cash">$0</span>
+                            </div>
+                            <div class="sub-metrics">
+                                <div class="sub-metric"><span style="color: var(--color-accent);" data-tooltip="Full government Age Pension payments received (Single Rate) dynamically calculated against the Assets and Income dual-test.">Age Pension Received</span><span id="s2-pension" style="color: var(--color-accent);">$0</span></div>
                             </div>
                             <div class="metric">
                                 <span class="label" data-tooltip="The final compounded value of the home based on your projected annual growth.">House Final Value</span>
@@ -205,6 +225,7 @@
                             </div>
                             <div class="sub-metrics">
                                 <div class="sub-metric"><span style="color: var(--color-text-muted);" data-tooltip="The total compounded rental income collected over the duration.">Total Rent Added</span><span id="s3-rent-added" style="color: var(--color-text-muted);">$0</span></div>
+                                <div class="sub-metric"><span style="color: var(--color-accent);" data-tooltip="Full government Age Pension payments received (Single Rate) dynamically calculated against the Assets and Income dual-test.">Age Pension Received</span><span id="s3-pension" style="color: var(--color-accent);">$0</span></div>
                             </div>
                             <div class="metric">
                                 <span class="label" data-tooltip="The final compounded value of the home based on your projected annual growth.">House Final Value</span>
