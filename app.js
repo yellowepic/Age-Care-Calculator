@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             let currentRetention = Math.min(0.10, 0.02 * i);
             let currentRefund = s1RadPaid - (s1RadPaid * currentRetention);
-            yoyS1.push({ netWealth: s1CurrentCash + currentRefund, cash: s1CurrentCash });
+            yoyS1.push({ netWealth: s1CurrentCash + currentRefund, cash: s1CurrentCash, radRefund: currentRefund });
         }
 
         let retentionRate = Math.min(0.10, 0.02 * vals.duration);
@@ -371,9 +371,17 @@ document.addEventListener('DOMContentLoaded', () => {
             let s2zClass = s2InitialCash < 0 ? 'negative-cash' : '';
             let s3zClass = s3InitialCash < 0 ? 'negative-cash' : '';
 
-            let s1zHtml = formatCurrency(initialNetWealth) + (s1InitialCash < 0 ? ' <br><span class="out-of-cash-badge">Out of Cash</span>' : '');
-            let s2zHtml = formatCurrency(initialNetWealth) + (s2InitialCash < 0 ? ' <br><span class="out-of-cash-badge">Out of Cash</span>' : '');
-            let s3zHtml = formatCurrency(initialNetWealth) + (s3InitialCash < 0 ? ' <br><span class="out-of-cash-badge">Out of Cash</span>' : '');
+            let s1zHtml = `<div style="margin-bottom: 4px;"><strong>${formatCurrency(initialNetWealth)}</strong></div>` +
+                          `<div style="font-size: 0.85em; color: var(--color-text-muted); line-height: 1.4;">Cash: ${formatCurrency(s1InitialCash)}<br>RAD: ${formatCurrency(Math.min(vals.savings + vals.houseValue, vals.rad))}</div>` + 
+                          (s1InitialCash < 0 ? '<span class="out-of-cash-badge" style="margin-top: 4px;">Out of Cash</span>' : '');
+            
+            let s2zHtml = `<div style="margin-bottom: 4px;"><strong>${formatCurrency(initialNetWealth)}</strong></div>` +
+                          `<div style="font-size: 0.85em; color: var(--color-text-muted); line-height: 1.4;">Cash: ${formatCurrency(s2InitialCash)}<br>House: ${formatCurrency(vals.houseValue)}</div>` + 
+                          (s2InitialCash < 0 ? '<span class="out-of-cash-badge" style="margin-top: 4px;">Out of Cash</span>' : '');
+            
+            let s3zHtml = `<div style="margin-bottom: 4px;"><strong>${formatCurrency(initialNetWealth)}</strong></div>` +
+                          `<div style="font-size: 0.85em; color: var(--color-text-muted); line-height: 1.4;">Cash: ${formatCurrency(s3InitialCash)}<br>House: ${formatCurrency(vals.houseValue)}</div>` + 
+                          (s3InitialCash < 0 ? '<span class="out-of-cash-badge" style="margin-top: 4px;">Out of Cash</span>' : '');
 
             const tr0 = document.createElement('tr');
             tr0.innerHTML = `
@@ -391,9 +399,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 let s2c = yoyS2[i].cash < 0 ? 'negative-cash' : '';
                 let s3c = yoyS3[i].cash < 0 ? 'negative-cash' : '';
 
-                let s1h = formatCurrency(yoyS1[i].netWealth) + (yoyS1[i].cash < 0 ? ' <br><span class="out-of-cash-badge">Out of Cash</span>' : '');
-                let s2h = formatCurrency(yoyS2[i].netWealth) + (yoyS2[i].cash < 0 ? ' <br><span class="out-of-cash-badge">Out of Cash</span>' : '');
-                let s3h = formatCurrency(yoyS3[i].netWealth) + (yoyS3[i].cash < 0 ? ' <br><span class="out-of-cash-badge">Out of Cash</span>' : '');
+                let s1h = `<div style="margin-bottom: 4px;"><strong>${formatCurrency(yoyS1[i].netWealth)}</strong></div>` +
+                          `<div style="font-size: 0.85em; color: var(--color-text-muted); line-height: 1.4;">Cash: ${formatCurrency(yoyS1[i].cash)}<br>RAD: ${formatCurrency(yoyS1[i].radRefund)}</div>` +
+                          (yoyS1[i].cash < 0 ? '<span class="out-of-cash-badge" style="margin-top: 4px;">Out of Cash</span>' : '');
+
+                // For S2/S3 we deduce House Value by subtracting Cash from Net Wealth mathematically (to ensure exact match with compounding)
+                let s2h = `<div style="margin-bottom: 4px;"><strong>${formatCurrency(yoyS2[i].netWealth)}</strong></div>` +
+                          `<div style="font-size: 0.85em; color: var(--color-text-muted); line-height: 1.4;">Cash: ${formatCurrency(yoyS2[i].cash)}<br>House: ${formatCurrency(yoyS2[i].netWealth - yoyS2[i].cash)}</div>` +
+                          (yoyS2[i].cash < 0 ? '<span class="out-of-cash-badge" style="margin-top: 4px;">Out of Cash</span>' : '');
+                
+                let s3h = `<div style="margin-bottom: 4px;"><strong>${formatCurrency(yoyS3[i].netWealth)}</strong></div>` +
+                          `<div style="font-size: 0.85em; color: var(--color-text-muted); line-height: 1.4;">Cash: ${formatCurrency(yoyS3[i].cash)}<br>House: ${formatCurrency(yoyS3[i].netWealth - yoyS3[i].cash)}</div>` +
+                          (yoyS3[i].cash < 0 ? '<span class="out-of-cash-badge" style="margin-top: 4px;">Out of Cash</span>' : '');
 
                 tr.innerHTML = `
                     <td>Year ${i + 1}</td>
