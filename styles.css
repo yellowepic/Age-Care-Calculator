@@ -565,3 +565,55 @@ body {
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* ------------------------------------- */
+/* Mobile Strategy & Responsive Overrides  */
+/* ------------------------------------- */
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+        gap: 1.5rem;
+    }
+    .panel {
+        padding: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0.5rem;
+        gap: 1.25rem;
+    }
+
+    .app-header {
+        padding: 1rem 1rem;
+    }
+
+    .app-header h1 {
+        font-size: 1.75rem;
+    }
+
+    .app-header p {
+        font-size: 0.95rem;
+    }
+
+    .metric, .sub-metric {
+        font-size: 0.85rem;
+    }
+    
+    .metric .value {
+        font-size: 1rem;
+    }
+    
+    .scenario-card h3 {
+        font-size: 1.15rem;
+    }
+}
