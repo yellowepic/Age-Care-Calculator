@@ -28,14 +28,15 @@ A comprehensive, responsive web application built for calculating, comparing, an
 
 ## 🚀 Accessing the Calculator
 
-Because this application requires zero build tools or complex backend servers, it is designed to be hosted entirely for free via **GitHub Pages**. This creates a live, public website you can instantly bookmark on your phone or laptop.
+🌐 **[Launch the Live Calculator on Your Device](https://yellowepic.github.io/Age-Care-Calculator/)**
 
-### Method 1: Host Live via GitHub Pages (Recommended)
-1. In your GitHub repository, click the **Settings** tab.
-2. On the left sidebar menu, click **Pages**.
-3. Under "Build and deployment" > "Source", select the **Branch** dropdown, choose `master` (or `main`), and hit **Save**.
-4. GitHub will automatically deploy the site. Refresh the page after 1-2 minutes to receive your live web URL (e.g. `https://your-username.github.io/Age-Care-Calculator/`).
-5. Open that link on **any device**—the responsive CSS will natively adapt to both narrow smartphones and wide desktop monitors!
+Because this application requires zero build tools or complex backend servers, it is hosted entirely for free via **GitHub Pages**. This live public link will automatically instantly update whenever you push new changes to the repository!
+
+### Method 1: The Live Website (Recommended)
+You can directly open the application right now on any phone or laptop by clicking this link:
+**https://yellowepic.github.io/Age-Care-Calculator/**
+
+The responsive CSS will natively adapt to both narrow smartphones and wide desktop monitors!
 
 ### Method 2: Run Locally (Offline)
 1. Clone or download this repository to your local machine.
